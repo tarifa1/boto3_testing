@@ -25,14 +25,6 @@ def main():
 
     upload_to_s3(file, bucket, subdir)
 
-    # AWS_ACCESS_KEY = sys.argv[1]
-    # AWS_ACCESS_SECRET_KEY = sys.argv[2]
-
-    # file = open(sys.argv[3], "r+")
-
-    # key = file.name
-    # bucket = sys.argv[4]
-
 
 if __name__ == '__main__':
     main()
