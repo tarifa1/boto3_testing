@@ -1,56 +1,48 @@
-import os
 import boto3
 import sys
-from boto3.s3.key import Key
 
 
-def upload_to_s3(aws_access_key_id, aws_secret_access_key, file, bucket, key,
-                 callback=None, md5=None, reduced_redundancy=False,
-                 content_type=None):
+def upload_to_s3(file, bucket, subdir):
     '''
     Method to upload a given file into an AWS S3 bucket
     '''
     try:
-        size = os.fstat(file.fileno()).st_size
-    except:
-        # Not all file objects implement fileno(),
-        # so we fall back on this
-        file.seek(0, os.SEEK_END)
-        size = file.tell()
+        key = "/{}/{}".format(subdir, file)
+        content = open(file, 'rb')
+        s3 = boto3.client('s3')
+        s3.put_object(Bucket=bucket, Key=key, Body=content)
 
-    conn = boto3.connect_s3(aws_access_key_id, aws_secret_access_key)
-    bucket = conn.get_bucket(bucket, validate=True)
-    k = Key(bucket)
-    k.key = key
-    if content_type:
-        k.set_metadata('Content-Type', content_type)
-    sent = k.set_contents_from_file(file, cb=callback, md5=md5,
-                                    reduced_redundancy=reduced_redundancy,
-                                    rewind=True)
-    file.seek(0)
+        success = True
 
-    if sent == size:
+    except Exception as e:
+        raise e
+
+    if not success:
         return True
     return False
 
 
 def main():
 
-    if len(sys.argv[0:]) < 5:
-        exit("Need 4 inputs: Access Key, Secret Key, File, Bucket")
+    if len(sys.argv[0:]) < 4:
+        exit("Need 3 inputs: File, Bucket, Bucket Key")
 
-    AWS_ACCESS_KEY = sys.argv[1]
-    AWS_ACCESS_SECRET_KEY = sys.argv[2]
+    file = sys.argv[1]
+    bucket = sys.argv[2]
+    subdir = sys.argv[3]
 
-    file = open(sys.argv[3], "r+")
-
-    key = file.name
-    bucket = sys.argv[4]
-
-    if upload_to_s3(AWS_ACCESS_KEY, AWS_ACCESS_SECRET_KEY, file, bucket, key):
-        print("Success!")
+    if upload_to_s3(file, bucket, subdir):
+        print("Success")
     else:
-        print("Upload failed")
+        print("Failed to upload")
+
+    # AWS_ACCESS_KEY = sys.argv[1]
+    # AWS_ACCESS_SECRET_KEY = sys.argv[2]
+
+    # file = open(sys.argv[3], "r+")
+
+    # key = file.name
+    # bucket = sys.argv[4]
 
 
 if __name__ == '__main__':
