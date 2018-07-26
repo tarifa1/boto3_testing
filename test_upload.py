@@ -31,10 +31,7 @@ def main():
     bucket = sys.argv[2]
     subdir = sys.argv[3]
 
-    if upload_to_s3(file, bucket, subdir):
-        print("Success")
-    else:
-        print("Failed to upload")
+    upload_to_s3(file, bucket, subdir)
 
     # AWS_ACCESS_KEY = sys.argv[1]
     # AWS_ACCESS_SECRET_KEY = sys.argv[2]
