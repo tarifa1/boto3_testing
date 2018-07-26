@@ -6,14 +6,11 @@ def upload_to_s3(file, bucket, subdir):
     '''
     Method to upload a given file into an AWS S3 bucket
     '''
-    try:
-        key = "/{}/{}".format(subdir, file)
-        content = open(file, 'rb')
-        s3 = boto3.client('s3')
-        s3.put_object(Bucket=bucket, Key=key, Body=content)
 
-    except Exception as e:
-        raise e
+    key = "/{}/{}".format(subdir, file)
+    content = open(file, 'rb')
+    s3 = boto3.client('s3')
+    s3.put_object(Bucket=bucket, Key=key, Body=content)
 
 
 def main():
