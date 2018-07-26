@@ -7,7 +7,7 @@ def upload_to_s3(file, bucket, subdir):
     Method to upload a given file into an AWS S3 bucket
     '''
 
-    key = "/{}/{}".format(subdir, file)
+    key = "{}/{}".format(subdir, file)
     print(key)
     content = open(file, 'rb')
     s3 = boto3.client('s3')
