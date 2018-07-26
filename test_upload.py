@@ -8,6 +8,7 @@ def upload_to_s3(file, bucket, subdir):
     '''
 
     key = "/{}/{}".format(subdir, file)
+    print(key)
     content = open(file, 'rb')
     s3 = boto3.client('s3')
     s3.put_object(Bucket=bucket, Key=key, Body=content)
